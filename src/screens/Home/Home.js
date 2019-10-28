@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, ToastAndroid} from 'react-native';
 import style from './style';
 import NumericInput from 'react-native-numeric-input';
 import ToggleTokensContainer from '../../Components/UI/ToggleTokenContainer/ToggleTokenContainer';
@@ -9,6 +9,29 @@ const Home = props => {
   const [freshPeople, setFreshPeople] = useState(0);
   const [people, setPeople] = useState(8);
   let withoutTable = {};
+
+  const checkDataAndNext = () => {
+    const table = ['og', 'oo', 'co', 'cg'];
+    let countBlockTable = 0;
+    for(let i=0; i<4; i++){
+      if(withoutTable[table[i]]===true){
+        countBlockTable++;
+      }
+    }
+    if(people<=8-team*2 && people/2 >= freshPeople && people+team*2 <= 8-countBlockTable*2) {
+      props.navigation.navigate('DrawResult', {
+        drawConfig: {
+          withoutTable: withoutTable,
+          people: people,
+          team: team,
+          freshPeople: freshPeople,
+        },
+      });
+    }
+    else {
+      ToastAndroid.show('Bad data', ToastAndroid.SHORT);
+    }
+  };
 
   return (
     <View style={style.container}>
@@ -65,16 +88,7 @@ const Home = props => {
           style={style.button}
           title={'RANDOM'}
           color={'#61d2dc'}
-          onPress={() =>
-            props.navigation.navigate('DrawResult', {
-              drawConfig: {
-                withoutTable: withoutTable,
-                people: people,
-                team: team,
-                freshPeople: freshPeople,
-              },
-            })
-          }
+          onPress={checkDataAndNext}
         />
       </View>
     </View>

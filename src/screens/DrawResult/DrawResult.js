@@ -7,110 +7,71 @@ const DrawResult = props => {
 	const config = navigation.getParam('drawConfig', 'NULL');
 	let result = {og: [], oo: [], co: [], cg: []};
 	const random = () => {
+		const teams = {first: [], second: [], third: [], four: []};
+		let teamsNumbers = ['first', 'second', 'third', 'four'];
+		if (config.withoutTable.og === true) {
+			teamsNumbers.splice(teamsNumbers.length - 1);
+		}
+		if (config.withoutTable.oo === true) {
+			teamsNumbers.splice(teamsNumbers.length - 1);
+		}
+		if (config.withoutTable.cg === true) {
+			teamsNumbers.splice(teamsNumbers.length - 1);
+		}
+		if (config.withoutTable.co === true) {
+			teamsNumbers.splice(teamsNumbers.length - 1);
+		}
 		for (let i = 0; i < config.team; i++) {
-			const draw = Math.round(Math.random() * 3) + 1;
-			if (draw === 1) {
-				if (config.withoutTable.og === false) {
-					result.og.push(i);
-					config.withoutTable.og = true;
-				} else {
-					i--;
+			teams[teamsNumbers[i]].push(i+1);
+			teamsNumbers = teamsNumbers.filter((item, index) => {
+				if (index !== i) {
+					return item;
 				}
-			} else if (draw === 2) {
-				if (config.withoutTable.oo === false) {
-					result.oo.push(i);
-					config.withoutTable.oo = true;
-				} else {
-					i--;
-				}
-			} else if (draw === 3) {
-				if (config.withoutTable.cg === false) {
-					result.cg.push(i);
-					config.withoutTable.cg = true;
-				} else {
-					i--;
-				}
-			} else if (draw === 4) {
-				if (config.withoutTable.co === false) {
-					result.co.push(i);
-					config.withoutTable.co = true;
-				} else {
-					i--;
-				}
-			}
+			});
 		}
-		const fershPeopleCheck = {og: false, oo: false, cg: false, co: false};
+		const copy = [...teamsNumbers];
 		for (let i = 0; i < config.freshPeople; i++) {
-			const draw = Math.round(Math.random() * 3) + 1;
-			if (draw === 1) {
-				if (config.withoutTable.og === false && fershPeopleCheck.og === false) {
-					result.og.push(i + config.team);
-					fershPeopleCheck.og = true;
-				} else {
-					i--;
+			const tmp = Math.floor(Math.random() * teamsNumbers.length);
+			teams[teamsNumbers[tmp]].push(i + config.team+1);
+			teamsNumbers = teamsNumbers.filter((item, index) => {
+				if (index !== tmp) {
+					return item;
 				}
-			} else if (draw === 2) {
-				if (config.withoutTable.oo === false && fershPeopleCheck.oo === false) {
-					result.oo.push(i + config.team);
-					fershPeopleCheck.oo = true;
-				} else {
-					i--;
-				}
-			} else if (draw === 3) {
-				if (config.withoutTable.cg === false && fershPeopleCheck.cg === false) {
-					result.cg.push(i + config.team);
-					fershPeopleCheck.cg = true;
-				} else {
-					i--;
-				}
-			} else if (draw === 4) {
-				if (config.withoutTable.co === false && fershPeopleCheck.co === false) {
-					result.co.push(i + config.team);
-					fershPeopleCheck.co = true;
-				} else {
-					i--;
-				}
+			});
+		}
+		teamsNumbers = [...copy];
+		for (let i = 0; i < config.people - config.freshPeople; i++) {
+			const tmp = Math.floor(Math.random() * teamsNumbers.length);
+			teams[teamsNumbers[tmp]].push(i + config.team + config.freshPeople+1);
+			if (teams[teamsNumbers[tmp]].length === 2) {
+				teamsNumbers = teamsNumbers.filter((item, index) => {
+					if (index !== tmp) {
+						return item;
+					}
+				});
 			}
 		}
-		for (let i = 0; i < config.people - config.freshPeople; i++) {
-			const draw = Math.round(Math.random() * 3) + 1;
-			if (draw === 1) {
-				if (config.withoutTable.og === false) {
-					result.og.push(i + config.team + config.freshPeople);
-					if (result.og.length === 2) {
-						config.withoutTable.og = true;
+		let allTeams = ['first', 'second', 'third', 'four'];
+		let allPosition = ['og', 'oo', 'cg', 'co'];
+		for(let i=0; i<4; i++){
+			if(config.withoutTable[allPosition[i]]===true){
+				allPosition = allPosition.filter((item, index) => {
+					if (index !== i) {
+						return item;
 					}
-				} else {
-					i--;
-				}
-			} else if (draw === 2) {
-				if (config.withoutTable.oo === false) {
-					result.oo.push(i + config.team + config.freshPeople);
-					if (result.oo.length === 2) {
-						config.withoutTable.oo = true;
-					}
-				} else {
-					i--;
-				}
-			} else if (draw === 3) {
-				if (config.withoutTable.cg === false) {
-					result.cg.push(i + config.team + config.freshPeople);
-					if (result.cg.length === 2) {
-						config.withoutTable.cg = true;
-					}
-				} else {
-					i--;
-				}
-			} else if (draw === 4) {
-				if (config.withoutTable.co === false) {
-					result.co.push(i + config.team + config.freshPeople);
-					if (result.cg.length === 2) {
-						config.withoutTable.co = true;
-					}
-				} else {
-					i--;
-				}
+				});
 			}
+		}
+		for (let i = 0; i < allTeams.length; i++) {
+			const tmp = Math.floor(Math.random() * allPosition.length);
+			teams[allTeams[i]].forEach((item) => {
+				result[allPosition[tmp]].push(item);
+			});
+			allPosition = allPosition.filter((item, index) => {
+				if (index !== tmp) {
+					return item;
+				}
+			});
 		}
 	};
 	random();
@@ -119,17 +80,17 @@ const DrawResult = props => {
 			<View style={style.row}>
 				<View style={style.table}>
 					<Text style={style.textTitle}>GOV I</Text>
-					<Text>{result.og}</Text>
+					<Text style={style.text}>{result.og}</Text>
 				</View>
 				<View style={style.table}>
 					<Text style={style.textTitle}>OP I</Text>
-					<Text>{result.oo}</Text>
+					<Text style={style.text}>{result.oo}</Text>
 				</View>
 			</View>
 			<View style={style.row}>
 				<View style={style.table}>
 					<Text style={style.textTitle}>GOV II</Text>
-					<Text>{result.cg}</Text>
+					<Text style={style.text}>{result.cg}</Text>
 				</View>
 				<View style={style.table}>
 					<Text style={style.textTitle}>OP II</Text>
