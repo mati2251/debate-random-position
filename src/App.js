@@ -5,6 +5,7 @@ import StartScreen from './screens/StartScreen/StartScreen';
 import {Transition} from 'react-native-reanimated';
 import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
+import DrawResult from './screens/DrawResult/DrawResult';
 
 const AppNavigatorSwitch = createStackNavigator(
   {
@@ -12,6 +13,12 @@ const AppNavigatorSwitch = createStackNavigator(
       screen: Home,
       navigationOptions: {
         headerTitle: 'SET CONFIG DRAW',
+      },
+    },
+    DrawResult: {
+      screen: DrawResult,
+      navigationOptions: {
+        headerTitle: 'DRAW RESULT',
       },
     },
   },

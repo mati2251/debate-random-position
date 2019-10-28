@@ -22,7 +22,7 @@ const style = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    padding: 10
+    padding: 10,
   },
 });
 

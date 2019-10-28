@@ -4,7 +4,7 @@ import style from './style';
 import NumericInput from 'react-native-numeric-input';
 import ToggleTokensContainer from '../../Components/UI/ToggleTokenContainer/ToggleTokenContainer';
 
-const Home = () => {
+const Home = props => {
   const [team, setTeam] = useState(0);
   const [freshPeople, setFreshPeople] = useState(0);
   const [people, setPeople] = useState(8);
@@ -65,7 +65,16 @@ const Home = () => {
           style={style.button}
           title={'RANDOM'}
           color={'#61d2dc'}
-          onPress={() => console.log(withoutTable)}
+          onPress={() =>
+            props.navigation.navigate('DrawResult', {
+              drawConfig: {
+                withoutTable: withoutTable,
+                people: people,
+                team: team,
+                freshPeople: freshPeople,
+              },
+            })
+          }
         />
       </View>
     </View>
